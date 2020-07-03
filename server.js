@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
+const colors = require('colors');
 const connectDB = require('./config/db');
 
 // load env vars, initial app, and connect to DB
@@ -21,7 +22,7 @@ app.use('/api/v1/bootcamps', bootcampRoutes);
 
 // server initial
 const PORT = process.env.PORT || 1337;
-const server = app.listen(PORT, console.log(`Server running in ${process.env.NODE_ENV} on port ${PORT}`));
+const server = app.listen(PORT, console.log(`Server running in ${process.env.NODE_ENV} on port ${PORT}`.yellow.bold));
 
 // handle unhandled promise rejection
 process.on('unhandledRejection', (err, promise) => {
