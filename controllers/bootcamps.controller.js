@@ -1,10 +1,18 @@
+const Bootcamp = require('../models/Bootcamp');
+
 /**
  * @desc    Get All Bootcamps
  * @route   GET /api/v1/bootcamps
  * @access  Public
  */
-const getBootcamps = (req, res, next) => {
-  res.status(200).json({ success: true, message: "show all bootcamps" });
+const getBootcamps = async (req, res, next) => {
+  try {
+    const bootcamps = await Bootcamp.find();
+    res.status(200).json({ success: true, message: "show all bootcamps", data: bootcamps });
+  } catch (error) {
+    console.error(`Error: ${error.message}`.red);
+    res.status(400).json({ success: false, message: error.message, data: null });
+  }
 };
 
 /**
@@ -12,8 +20,16 @@ const getBootcamps = (req, res, next) => {
  * @route   GET /api/v1/bootcamps/:id
  * @access  Public
  */
-const getSingleBootcamp = (req, res, next) => {
-  res.status(200).json({ success: true, message: `show bootcamps ${req.params.id}` });
+const getSingleBootcamp = async (req, res, next) => {
+  try {
+    const bootcamp = await Bootcamp.findById(req.params.id);
+
+    if (!bootcamp) return res.status(404).json({ success: false, message: `data ${req.params.id} not found`, data: bootcamp })
+    res.status(200).json({ success: true, message: `show bootcamps ${req.params.id}`, data: bootcamp });
+  } catch (error) {
+    console.error(`Error: ${error.message}`.red);
+    res.status(400).json({ success: false, message: error.message, data: null });
+  }
 };
 
 /**
@@ -21,8 +37,14 @@ const getSingleBootcamp = (req, res, next) => {
  * @route   POST /api/v1/bootcamps
  * @access  Public
  */
-const createBootcamp = (req, res, next) => {
-  res.status(201).json({ success: true, message: "create bootcamp" });
+const createBootcamp = async (req, res, next) => {
+  try {
+    const bootcamp = await Bootcamp.create(req.body);
+    res.status(201).json({ success: true, message: "create bootcamp success", data: bootcamp });
+  } catch (error) {
+    console.error(`Error: ${error.message}`.red);
+    res.status(400).json({ success: false, message: error.message, data: null });
+  }
 };
 
 /**

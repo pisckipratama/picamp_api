@@ -13,6 +13,8 @@ connectDB();
 const bootcampRoutes = require('./routes/bootcamps');
 
 // dev logging middleware
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
