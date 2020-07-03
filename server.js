@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const colors = require('colors');
+const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db');
 
 // load env vars, initial app, and connect to DB
@@ -21,6 +22,8 @@ if (process.env.NODE_ENV === 'development') {
 
 // mount routes
 app.use('/api/v1/bootcamps', bootcampRoutes);
+
+app.use(errorHandler);
 
 // server initial
 const PORT = process.env.PORT || 1337;
