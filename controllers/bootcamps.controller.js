@@ -9,7 +9,7 @@ const asyncHandler = require('../middleware/async');
  */
 const getBootcamps = asyncHandler(async (req, res, next) => {
   const bootcamps = await Bootcamp.find();
-  res.status(200).json({ success: true, message: "show all bootcamps", data: bootcamps });
+  res.status(200).json({ success: true, message: "show all bootcamps", count: bootcamps.length, data: bootcamps });
 });
 
 /**
