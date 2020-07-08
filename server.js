@@ -12,6 +12,7 @@ connectDB();
 
 // routes file
 const bootcampRoutes = require('./routes/bootcamps');
+const coursesRoutes = require('./routes/courses');
 
 // dev logging middleware
 app.use(express.urlencoded({ extended: false }));
@@ -22,6 +23,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // mount routes
 app.use('/api/v1/bootcamps', bootcampRoutes);
+app.use('/api/v1/courses', coursesRoutes);
 
 app.use(errorHandler);
 
