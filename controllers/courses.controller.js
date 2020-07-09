@@ -1,4 +1,5 @@
 const Course = require('../models/Course');
+const Bootcamp = require('../models/Bootcamp');
 const ErrorHandler = require('../helpers/errorResponse');
 const asyncHandler = require('../middleware/async');
 
@@ -29,4 +30,34 @@ const getCourses = asyncHandler(async (req, res, next) => {
   });
 });
 
-module.exports = { getCourses };
+/**
+ * @desc    Get Single Course
+ * @route   GET /api/v1/courses/:id
+ * @access  Public
+ */
+const getSingleCourse = asyncHandler(async (req, res, next) => {
+  const course = await Course.findById(req.params.id).populate({
+    path: 'bootcamp',
+    select: 'name description'
+  });
+
+  if (!course) return next(new ErrorHandler(`No resource with the id of ${req.params.id}`, 404));
+
+  res.status(200).json({ success: true, data: course });
+});
+
+/**
+ * @desc    Add Course
+ * @route   POST /api/v1/bootcamp/:bootcampId/course
+ * @access  Private
+ */
+const createCourse = asyncHandler(async (req, res, next) => {
+  req.body.bootcamp = req.params.bootcampId;
+  const bootcamp = await Bootcamp.findById(req.params.bootcampId);
+
+  if (!bootcamp) return next(new ErrorHandler(`No resource with the id of '${req.params.bootcampId}'`, 404));
+  const course = await Course.create(req.body);
+  res.status(201).json({ success: true, data: course });
+});
+
+module.exports = { getCourses, getSingleCourse, createCourse };
