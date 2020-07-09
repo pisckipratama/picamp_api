@@ -3,11 +3,9 @@ const ErrorHandler = require('../helpers/errorResponse');
 const asyncHandler = require('../middleware/async');
 const geocoder = require('../helpers/geocoder');
 
-/**
- * @desc    Get All Bootcamps
- * @route   GET /api/v1/bootcamps
- * @access  Public
- */
+// @desc    Get All Bootcamps
+// @route   GET /api/v1/bootcamps
+// @access  Public
 const getBootcamps = asyncHandler(async (req, res, next) => {
   let query;
 
@@ -82,11 +80,9 @@ const getBootcamps = asyncHandler(async (req, res, next) => {
     });
 });
 
-/**
- * @desc    Get Bootcamp 
- * @route   GET /api/v1/bootcamps/:id
- * @access  Public
- */
+// @desc    Get Bootcamp 
+// @route   GET /api/v1/bootcamps/:id
+// @access  Public
 const getSingleBootcamp = asyncHandler(async (req, res, next) => {
   const bootcamp = await Bootcamp.findById(req.params.id);
 
@@ -94,21 +90,17 @@ const getSingleBootcamp = asyncHandler(async (req, res, next) => {
   res.status(200).json({ success: true, message: `show bootcamps ${req.params.id}`, data: bootcamp });
 });
 
-/**
- * @desc    Create Bootcamp 
- * @route   POST /api/v1/bootcamps
- * @access  Public
- */
+// @desc    Create Bootcamp 
+// @route   POST /api/v1/bootcamps
+// @access  Public
 const createBootcamp = asyncHandler(async (req, res, next) => {
   const bootcamp = await Bootcamp.create(req.body);
   res.status(201).json({ success: true, message: "create bootcamp success", data: bootcamp });
 });
 
-/**
- * @desc    Update Bootcamp 
- * @route   PUT /api/v1/bootcamps
- * @access  Public
- */
+// @desc    Update Bootcamp 
+// @route   PUT /api/v1/bootcamps
+// @access  Public
 const updateBootcamp = asyncHandler(async (req, res, next) => {
   const bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
@@ -119,11 +111,9 @@ const updateBootcamp = asyncHandler(async (req, res, next) => {
   res.status(200).json({ success: true, message: `update bootcamps ${req.params.id}`, data: bootcamp });
 });
 
-/**
- * @desc    Delete Bootcamp 
- * @route   DELETE /api/v1/bootcamps
- * @access  Public
- */
+// @desc    Delete Bootcamp 
+// @route   DELETE /api/v1/bootcamps
+// @access  Public
 const deleteBootcamp = asyncHandler(async (req, res, next) => {
   const bootcamp = await Bootcamp.findById(req.params.id);
   if (!bootcamp) return next(new ErrorHandler(`Resource not found with Objectid of ${req.params.id}`, 404));
