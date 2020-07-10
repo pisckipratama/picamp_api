@@ -8,24 +8,16 @@ const asyncHandler = require('../middleware/async');
 // @route   GET /api/v1/bootcamps/:bootcampId/courses
 // @access  Public
 const getCourses = asyncHandler(async (req, res, next) => {
-  let query;
-
   if (req.params.bootcampId) {
-    query = Course.find({ bootcamp: req.params.bootcampId });
-  } else {
-    query = Course.find().populate({
-      path: 'bootcamp',
-      select: 'name description'
+    const courses = await Course.find({ bootcamp: req.params.bootcampId });
+    return res.status(200).json({
+      success: true,
+      count: courses.length,
+      data: courses
     });
+  } else {
+    res.status(200).json(res.advancedResult);
   }
-
-  const courses = await query;
-
-  res.status(200).json({
-    success: true,
-    count: courses.length,
-    data: courses
-  });
 });
 
 // @desc    Get Single Course
@@ -59,7 +51,7 @@ const createCourse = asyncHandler(async (req, res, next) => {
 // @access  Private
 const updateCourse = asyncHandler(async (req, res, next) => {
   let course = await Course.findById(req.params.id);
-  
+
   if (!course) return next(new ErrorHandler(`No resource with the id of '${req.params.id}'`, 404));
   course = await Course.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
@@ -73,9 +65,9 @@ const updateCourse = asyncHandler(async (req, res, next) => {
 // @access  Private
 const deleteCourse = asyncHandler(async (req, res, next) => {
   const course = await Course.findById(req.params.id);
-  
+
   if (!course) return next(new ErrorHandler(`No resource with the id of '${req.params.id}'`, 404));
-  
+
   await course.remove();
   res.status(200).json({ success: true, data: {} });
 });
