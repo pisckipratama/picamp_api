@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const colors = require('colors');
 
 const CourseSchema = new mongoose.Schema({
   title: {
@@ -41,9 +40,7 @@ const CourseSchema = new mongoose.Schema({
 
 // Static method to get avg of course tuitions
 CourseSchema.statics.getAverageCost = async function (bootcampId) {
-  console.log('calculation avg const...'.cyan);
-
-  const obj = await this.aggregate([
+    const obj = await this.aggregate([
     {
       $match: { bootcamp: bootcampId }
     },
