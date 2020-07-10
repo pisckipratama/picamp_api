@@ -16,7 +16,7 @@ const errorHandler = (err, req, res, next) => {
 
   // mongoose duplicate object
   if (err.code === 11000) {
-    const message = `Duplicate field value entered.`;
+    const message = `Resource already exists.`;
     error = new ErrorHandler(message, 400);
   }
 
