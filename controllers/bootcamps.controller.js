@@ -45,12 +45,23 @@ const createBootcamp = asyncHandler(async (req, res, next) => {
 // @route   PUT /api/v1/bootcamps
 // @access  Public
 const updateBootcamp = asyncHandler(async (req, res, next) => {
-  const bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id, req.body, {
+  let bootcamp = await Bootcamp.findById(req.params.id, req.body, {
     new: true,
     runValidators: true
   });
 
   if (!bootcamp) return next(new ErrorHandler(`Resource not found with Objectid of ${req.params.id}`, 404));
+
+  // make sure is bootcamp owner
+  if (bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    return next(new ErrorHandler(`User ${req.user.id} is not authorized to update this bootcamp`, 401));
+  }
+
+  bootcamp = await Bootcamp.findOneAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true
+  });
+
   res.status(200).json({ success: true, message: `update bootcamps ${req.params.id}`, data: bootcamp });
 });
 
@@ -59,7 +70,14 @@ const updateBootcamp = asyncHandler(async (req, res, next) => {
 // @access  Public
 const deleteBootcamp = asyncHandler(async (req, res, next) => {
   const bootcamp = await Bootcamp.findById(req.params.id);
+
   if (!bootcamp) return next(new ErrorHandler(`Resource not found with Objectid of ${req.params.id}`, 404));
+
+  // make sure is bootcamp owner
+  if (bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    return next(new ErrorHandler(`User ${req.user.id} is not authorized to update this bootcamp`, 401));
+  }
+
   bootcamp.remove();
   res.json({ success: true, message: `delete bootcamps ${req.params.id}`, data: {} });
 });
@@ -92,6 +110,11 @@ const getBootcampsRadius = asyncHandler(async (req, res, next) => {
 const bootcampPhotoUpload = asyncHandler(async (req, res, next) => {
   const bootcamp = await Bootcamp.findById(req.params.id);
   if (!bootcamp) return next(new ErrorHandler(`Resource not found with Objectid of ${req.params.id}`, 404));
+
+  // make sure is bootcamp owner
+  if (bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    return next(new ErrorHandler(`User ${req.user.id} is not authorized to update this bootcamp`, 401));
+  }
 
   if (!req.files) {
     return next(new ErrorHandler(`Please upload an image file`, 400));

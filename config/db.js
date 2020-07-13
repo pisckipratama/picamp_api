@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
-const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/devcamper';
 
 const connectDB = async () => {
-  const conn = await mongoose.connect(uri, {
+  const conn = await mongoose.connect(process.env.MONGODB_URI, {
     useCreateIndex: true,
     useUnifiedTopology: true,
     useNewUrlParser: true,
