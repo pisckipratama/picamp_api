@@ -1,6 +1,7 @@
 const ErrorHandler = require('../helpers/errorResponse');
 const asyncHandler = require('../middleware/async');
 const User = require('../models/User');
+const ErrorResponse = require('../helpers/errorResponse');
 
 // @desc    Register User
 // @route   POST /api/v1/auth/register
@@ -79,8 +80,30 @@ const getMe = asyncHandler(async (req, res, next) => {
   })
 });
 
+// @desc    Forgot Password
+// @route   POST /api/v1/auth/forgotpassword
+// @access Public
+const forgotPassword = asyncHandler(async (req, res, next) => {
+  const user = await User.findOne({ email: req.body.email });
+
+  if (!user) {
+    return next(new ErrorResponse('There is no user with that email', 404));
+  }
+
+  // get reset token
+  const resetToken = user.getResetPasswordToken();
+  
+  await user.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    success: true,
+    data: user
+  });
+});
+
 module.exports = {
   registerUser,
   loginUser,
-  getMe
+  getMe,
+  forgotPassword
 };
