@@ -9,7 +9,7 @@ const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db');
 
 // load env vars, initial app, and connect to DB
-dotenv.config({ path: "./config/config.env" });
+dotenv.config({ path: './config/config.env' });
 const app = express();
 connectDB();
 
@@ -18,6 +18,7 @@ const bootcampRoutes = require('./routes/bootcamps');
 const coursesRoutes = require('./routes/courses');
 const authRoutes = require('./routes/auth');
 const usersRoutes = require('./routes/users');
+const reviewsRoutes = require('./routes/reviews');
 
 // middleware
 app.use(express.urlencoded({ extended: false }));
@@ -33,13 +34,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/v1/bootcamps', bootcampRoutes);
 app.use('/api/v1/courses', coursesRoutes);
 app.use('/api/v1/auth', authRoutes);
-app.use('/api/v1/auth/users', usersRoutes);
+app.use('/api/v1/users', usersRoutes);
+app.use('/api/v1/reviews', reviewsRoutes);
 
 app.use(errorHandler);
 
 // server initial
 const PORT = process.env.PORT || 1337;
-const server = app.listen(PORT, console.log(`Server running in ${process.env.NODE_ENV} on port ${PORT}`.yellow.bold));
+const server = app.listen(
+  PORT,
+  console.log(
+    `Server running in ${process.env.NODE_ENV} on port ${PORT}`.yellow.bold
+  )
+);
 
 // handle unhandled promise rejection
 process.on('unhandledRejection', (err, promise) => {
