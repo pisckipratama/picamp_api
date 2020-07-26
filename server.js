@@ -6,6 +6,11 @@ const colors = require('colors');
 const fileupload = require('express-fileupload');
 const cookieParser = require('cookie-parser');
 const mongooSanitize = require('express-mongo-sanitize');
+const helmet = require('helmet');
+const xss = require('xss-clean');
+const rateLimit = require('express-rate-limit');
+const hpp = require('hpp');
+const cors = require('cors');
 const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db');
 
@@ -31,6 +36,20 @@ if (process.env.NODE_ENV === 'development') {
 app.use(fileupload());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(mongooSanitize());
+app.use(helmet());
+app.use(xss());
+
+// rate limiting
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 mins,
+  max: 100,
+});
+
+app.use(limiter);
+app.use(hpp()); // prevent http params pollution
+
+// enable cors
+app.use(cors());
 
 // mount routes
 app.use('/api/v1/bootcamps', bootcampRoutes);
