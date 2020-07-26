@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const colors = require('colors');
 const fileupload = require('express-fileupload');
 const cookieParser = require('cookie-parser');
+const mongooSanitize = require('express-mongo-sanitize');
 const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db');
 
@@ -29,6 +30,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 app.use(fileupload());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(mongooSanitize());
 
 // mount routes
 app.use('/api/v1/bootcamps', bootcampRoutes);

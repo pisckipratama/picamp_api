@@ -9,8 +9,8 @@ const errorHandler = (err, req, res, next) => {
   console.error(err.stack.red);
 
   // mongoose bad objectid
-  if (err.name === "CastError") {
-    const message = `Resource not found with Objectid of ${err.value}`;
+  if (err.name === 'CastError') {
+    const message = `Resource not found`;
     error = new ErrorHandler(message, 404);
   }
 
@@ -21,14 +21,14 @@ const errorHandler = (err, req, res, next) => {
   }
 
   // mongoose validation error
-  if (err.name === "ValidationError") {
-    const message = Object.values(err.errors).map(val => val.message);
+  if (err.name === 'ValidationError') {
+    const message = Object.values(err.errors).map((val) => val.message);
     error = new ErrorHandler(message, 400);
   }
-  
+
   res.status(error.statusCode || 500).json({
     success: false,
-    message: error.message || "Server error."
+    message: error.message || 'Server error.',
   });
 };
 
