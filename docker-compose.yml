@@ -1,0 +1,18 @@
+version: '3'
+services:
+  node:
+    restart: always
+    build: .
+    ports:
+      - 3030:3030
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=mongodb://mongo:27017/docker-node-mongo
+  mongo:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb:/data/db
+volumes:
+ mongodb:
